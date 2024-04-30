@@ -31,7 +31,7 @@ def fixture_mock_setup_entry() -> Generator[AsyncMock, None, None]:
         yield mock_setup_entry
 
 
-DEFAULT_CAPABILITEIS: set[GoveeLightCapability] = {
+DEFAULT_CAPABILITIES: set[GoveeLightCapability] = {
     GoveeLightCapability.COLOR_RGB,
     GoveeLightCapability.COLOR_KELVIN_TEMPERATURE,
     GoveeLightCapability.BRIGHTNESS,

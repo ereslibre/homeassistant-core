@@ -9,7 +9,7 @@ from homeassistant.components.govee_light_local.const import DOMAIN
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 
-from .conftest import DEFAULT_CAPABILITEIS
+from .conftest import DEFAULT_CAPABILITIES
 
 
 async def test_creating_entry_has_no_devices(
@@ -58,7 +58,7 @@ async def test_creating_entry_has_with_devices(
             ip="192.168.1.100",
             fingerprint="asdawdqwdqwd1",
             sku="H615A",
-            capabilities=DEFAULT_CAPABILITEIS,
+            capabilities=DEFAULT_CAPABILITIES,
         )
     ]
 
