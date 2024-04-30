@@ -3,13 +3,31 @@
 from __future__ import annotations
 
 import asyncio
+import ipaddress
 import logging
 
 from govee_local_api import GoveeController
+import voluptuous as vol
 
 from homeassistant.components import network
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlow,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_entry_flow
+import homeassistant.helpers.config_validation as cv
+
+from homeassistant.components.light import (
+    PLATFORM_SCHEMA
+)
+
+from homeassistant.const import {
+    CONF_IP_ADDRESS,
+    CONF_NAME
+}
 
 from .const import (
     CONF_LISTENING_PORT_DEFAULT,
@@ -21,6 +39,46 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
+class GoveeFlowHandler(ConfigFlow, domain=DOMAIN):
+    """Handle a config flow."""
+
+    VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(
+        config_entry: ConfigEntry,
+    ) -> GoveeFlowHandler(config_entry):
+        """Get the options flow for this handler."""
+        return GoveeFlowHandler(config_entry)
+
+    def __init__(self) -> None:
+        self.host: str = {}
+        self.port: int = {}
+
+    def _show_form(
+            self,
+            step_id: str,
+            user_input: dict[str, Any] | None = None,
+            errors: dict[str, str] | None = None,
+    ) -> ConfigFlowResult:
+        if not user_input:
+            user_input = {}
+
+        description_placeholders = {}
+        data_schema = vol.Schema(
+            {
+                vol.Required(CONF_IP_ADDRESS): vol.All(ipaddress.ip_address, cv.string),
+                vol.Optional(CONF_NAME, default="Govee light"): cv.string,
+            }
+        )
+
+        return self.async_show_form(
+            step_id=step_id,
+            data_schema=PLATFORM_SCHEMA,
+            errors=errors or {},
+            description_placeholders=description_placeholders,
+        )
 
 async def _async_has_devices(hass: HomeAssistant) -> bool:
     """Return if there are devices that can be discovered."""
